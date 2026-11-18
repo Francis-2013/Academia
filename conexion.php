@@ -6,6 +6,12 @@ $user = getenv("MYSQLUSER");
 $password = getenv("MYSQLPASSWORD");
 $database = getenv("MYSQLDATABASE");
 
+// Verificar variables de entorno
+if (!$host || !$port || !$user || !$database) {
+    die("Error: Faltan configurar las variables de conexión a MySQL.");
+}
+
+// Conectar a MySQL
 $conexion = mysqli_connect(
     $host,
     $user,
@@ -17,4 +23,5 @@ $conexion = mysqli_connect(
 if (!$conexion) {
     die("Error de conexión: " . mysqli_connect_error());
 }
+
 ?>
