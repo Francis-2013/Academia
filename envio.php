@@ -1,32 +1,46 @@
 <?php
-    $host="localhost";
-    $user="root";
-    $password="";
-    $db="academia";
 
-    $con=mysqli_connect($host, $user, $password, $db)or die("Problemas al conectar");
-        mysqli_select_db($con,$db);
+require_once "conexion.php";
 
-    //trabajando con las variables
+// Recibir datos del formulario
+$nombres = $_POST["nombres"];
+$direction = $_POST["direction"];
+$correo = $_POST["correo"];
+$comentario = $_POST["comentario"];
 
-    $nombres=$_POST["nombres"];
-    $direction=$_POST["direction"];
-    $correo=$_POST["correo"];
-    $comentario=$_POST["comentario"];
+// Preparar consulta
+$sql = "INSERT INTO datos (nombres, direction, correo, comentario)
+        VALUES (?, ?, ?, ?)";
 
-    $sql="INSERT INTO datos VALUES ('$nombres','$direction','$correo','$comentario')";
-    $ejecutar=mysqli_query($con, $sql);
-    
+$stmt = mysqli_prepare($conexion, $sql);
 
-    //usamos las condiciones
-    if(!$ejecutar){
-        echo "<script>alert('Problemas al enviar');</script>";
-        echo "<script>window.location.href='index.html';</script>";
-    }
-    else{
-        echo "<script>alert('Datos enviados Correctamente');</script>";
-        echo "<script>window.location.href='index.html';</script>";
-    }
+mysqli_stmt_bind_param(
+    $stmt,
+    "ssss",
+    $nombres,
+    $direction,
+    $correo,
+    $comentario
+);
 
+// Ejecutar consulta
+if (mysqli_stmt_execute($stmt)) {
+
+    echo "<script>
+        alert('Datos enviados correctamente');
+        window.location.href='index.html';
+    </script>";
+
+} else {
+
+    echo "<script>
+        alert('Problemas al enviar los datos');
+        window.location.href='index.html';
+    </script>";
+
+}
+
+mysqli_stmt_close($stmt);
+mysqli_close($conexion);
 
 ?>
